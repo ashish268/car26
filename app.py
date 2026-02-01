@@ -164,11 +164,12 @@ input_df = pd.get_dummies(
 input_df = input_df.reindex(columns=model_columns, fill_value=0)
 
 # ================= Prediction =================
+# ================= Prediction =================
 st.markdown("---")
 mid = st.columns(3)[1]
 
 with mid:
-         if st.button("🚀 PREDICT PRICE", use_container_width=True):
+    if st.button("🚀 PREDICT PRICE", use_container_width=True):
         prediction = model.predict(input_df)[0]
 
         st.markdown(
@@ -180,7 +181,6 @@ with mid:
             """,
             unsafe_allow_html=True
         )
-
         # ================= Animated Chart =================
         chart_df = pd.DataFrame({
             "Scenario": ["Low", "Predicted", "High"],
