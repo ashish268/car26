@@ -37,7 +37,7 @@ h1, h2, h3 {
 """, unsafe_allow_html=True)
 
 # ================= Load Model =================
-data = pickle.load(open("used_car_model (1).pkl", "rb"))
+data = pickle.load(open("used_car_model.pkl", "rb"))
 model = data["model"]
 model_columns = data["columns"]
 
