@@ -68,9 +68,9 @@ st.markdown("---")
 
 # ================= Car Image Gallery =================
 img1, img2, img3 = st.columns(3)
-img1.image("https://cdn.pixabay.com/photo/2017/01/06/19/15/auto-1957037_1280.jpg", use_container_width=True)
-img2.image("https://cdn.pixabay.com/photo/2016/11/29/09/32/car-1869823_1280.jpg", use_container_width=True)
-img3.image("https://cdn.pixabay.com/photo/2016/11/18/12/52/automobile-1834273_1280.jpg", use_container_width=True)
+img1.image("https://www.carstreetindia.com/carstreet-login/uploads/blog/67a9c463c14951738923637_Carrera%201.jpeg", use_container_width=True)
+img2.image("https://content.jdmagicbox.com/comp/nashik/n8/0253px253.x253.140508132504.h3n8/catalogue/anand-auto-consultant-panchavati-nashik-second-hand-car-dealers-chevrolet-cpwvh0icvn.jpg", use_container_width=True)
+img3.image("https://www.kamdhenucars.com/assets/front/images/cars/3294/1756467960_mCdCzQu6.jpg", use_container_width=True)
 
 st.markdown("---")
 
