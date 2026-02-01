@@ -168,8 +168,8 @@ st.markdown("---")
 mid = st.columns(3)[1]
 
 with mid:
-        if st.button("🚀 PREDICT PRICE", use_container_width=True):
-        prediction = model.predict(input_df)
+         if st.button("🚀 PREDICT PRICE", use_container_width=True):
+        prediction = model.predict(input_df)[0]
 
         st.markdown(
             f"""
