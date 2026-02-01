@@ -1,13 +1,21 @@
 import streamlit as st
 import pickle
 import pandas as pd
+import altair as alt
 
 # ================= Page Config =================
 st.set_page_config(
-    page_title="AI Car Price Predictor",
-    page_icon="🚘",
+    page_title="AI Used Car Price Predictor",
+    page_icon="🚗",
     layout="wide"
 )
+
+# ================= Background Music =================
+st.markdown("""
+<audio autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+</audio>
+""", unsafe_allow_html=True)
 
 # ================= CSS Styling =================
 st.markdown("""
@@ -15,30 +23,22 @@ st.markdown("""
 body {
     background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
 }
-.main {
-    background-color: transparent;
-}
-h1 {
-    color: #00ffd5;
-    text-align: center;
-}
-h2, h3 {
-    color: #ffcc00;
-}
+h1 { color: #00ffd5; text-align: center; }
+h2, h3 { color: #ffcc00; }
 .card {
     background: linear-gradient(145deg, #141e30, #243b55);
     padding: 20px;
     border-radius: 18px;
-    box-shadow: 0px 0px 25px rgba(0,255,213,0.25);
+    box-shadow: 0 0 25px rgba(0,255,213,0.25);
     margin-bottom: 20px;
 }
-.ad-card {
+.ad {
     background: linear-gradient(135deg, #ff512f, #dd2476);
     padding: 15px;
     border-radius: 15px;
     color: white;
     text-align: center;
-    box-shadow: 0 0 20px rgba(255,81,47,0.6);
+    margin-bottom: 20px;
 }
 .price-box {
     background: linear-gradient(135deg, #00c6ff, #0072ff);
@@ -63,26 +63,26 @@ model_columns = data["columns"]
 
 # ================= Header =================
 st.markdown("<h1>🚗 AI Used Car Price Predictor</h1>", unsafe_allow_html=True)
-st.markdown("### 🔮 Smart • Colorful • Futuristic ML App")
+st.markdown("### 🎶 Smart • Animated • Futuristic ML Experience")
 st.markdown("---")
 
-# ================= Hero Section =================
-st.image(
-    "https://cdn.pixabay.com/photo/2016/11/29/09/32/car-1869823_1280.jpg",
-    use_container_width=True
-)
+# ================= Car Image Gallery =================
+img1, img2, img3 = st.columns(3)
+img1.image("https://cdn.pixabay.com/photo/2017/01/06/19/15/auto-1957037_1280.jpg", use_container_width=True)
+img2.image("https://cdn.pixabay.com/photo/2016/11/29/09/32/car-1869823_1280.jpg", use_container_width=True)
+img3.image("https://cdn.pixabay.com/photo/2016/11/18/12/52/automobile-1834273_1280.jpg", use_container_width=True)
 
 st.markdown("---")
 
 # ================= Layout =================
 left, center, right = st.columns([1.2, 1.5, 1])
 
-# ================= INPUTS =================
+# ================= Inputs =================
 with left:
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("🔧 Car Details")
 
-    year = st.slider("📅 Manufacturing Year", 1995, 2025, 2018)
+    year = st.slider("📅 Year", 1995, 2025, 2018)
     kms = st.slider("🛣️ Kilometers Driven", 0, 200000, 50000)
     seats = st.selectbox("💺 Seats", [2, 4, 5, 6, 7])
     owner = st.selectbox("👤 Owner Type", ["First", "Second", "Third", "Fourth & Above"])
@@ -98,25 +98,30 @@ with center:
     mileage = st.slider("📊 Mileage (km/l)", 5.0, 35.0, 18.0)
     engine = st.slider("🔩 Engine (CC)", 500, 4000, 1200)
     power = st.slider("⚡ Power (bhp)", 40.0, 400.0, 90.0)
-    new_price = st.slider("💰 New Car Price (Lakhs ₹)", 2.0, 50.0, 8.0)
+    new_price = st.slider("💰 New Price (Lakhs ₹)", 2.0, 50.0, 8.0)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
 with right:
-    st.markdown('<div class="ad-card">', unsafe_allow_html=True)
-    st.subheader("🔥 Sponsored Ad")
-    st.write("🚘 **Buy New Cars at Best Price!**")
-    st.write("💸 Zero Down Payment")
-    st.write("📞 Call: 1800-FAKE-AD")
+    st.markdown('<div class="ad">', unsafe_allow_html=True)
+    st.subheader("🔥 Mega Car Sale")
+    st.write("🚘 Flat 20% OFF on New Cars")
+    st.write("📞 1800-CAR-SALE")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown('<div class="ad">', unsafe_allow_html=True)
+    st.subheader("⚡ Insurance Offer")
+    st.write("🛡️ Free Insurance for 1 Year")
+    st.write("💳 No Cost EMI")
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.image(
-        "https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif",
+        "https://media.giphy.com/media/l0HlQ7LRal8P6m9So/giphy.gif",
         caption="AI analysing your car 🚀",
         use_container_width=True
     )
 
-# ================= Input Processing =================
+# ================= Prepare Input =================
 input_dict = {
     "Year": year,
     "Kilometers_Driven": kms,
@@ -131,34 +136,53 @@ input_dict = {
 }
 
 input_df = pd.DataFrame([input_dict])
-
 input_df = pd.get_dummies(
     input_df,
     columns=["Fuel_Type", "Transmission", "Owner_Type"],
     drop_first=True
 )
-
 input_df = input_df.reindex(columns=model_columns, fill_value=0)
 
 # ================= Prediction =================
 st.markdown("---")
-predict_col = st.columns(3)[1]
+mid = st.columns(3)[1]
 
-with predict_col:
+with mid:
     if st.button("🚀 PREDICT PRICE", use_container_width=True):
-        prediction = model.predict(input_df)
+        prediction = model.predict(input_df)[0]
+
         st.markdown(
             f"""
             <div class="price-box">
                 <h2>💎 Estimated Car Value</h2>
-                <h1>₹ {round(prediction[0], 2)} Lakhs</h1>
+                <h1>₹ {round(prediction, 2)} Lakhs</h1>
             </div>
             """,
             unsafe_allow_html=True
         )
 
+        # ================= Animated Chart =================
+        chart_df = pd.DataFrame({
+            "Scenario": ["Low", "Predicted", "High"],
+            "Price (Lakhs)": [prediction * 0.85, prediction, prediction * 1.15]
+        })
+
+        chart = alt.Chart(chart_df).mark_bar(
+            cornerRadiusTopLeft=10,
+            cornerRadiusTopRight=10
+        ).encode(
+            x="Scenario",
+            y="Price (Lakhs)",
+            color="Scenario",
+            tooltip=["Price (Lakhs)"]
+        ).properties(
+            height=300
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
 # ================= Footer =================
 st.markdown(
-    '<div class="footer">✨ Built with Streamlit • Machine Learning • AI ✨</div>',
+    '<div class="footer">✨ AI • Streamlit • ML • Future Tech ✨</div>',
     unsafe_allow_html=True
 )
