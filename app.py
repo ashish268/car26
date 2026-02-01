@@ -1,37 +1,57 @@
 import streamlit as st
 import pickle
 import pandas as pd
-import numpy as np
 
 # ================= Page Config =================
 st.set_page_config(
-    page_title="AI Used Car Price Predictor",
-    page_icon="🚗",
+    page_title="AI Car Price Predictor",
+    page_icon="🚘",
     layout="wide"
 )
 
-# ================= Custom CSS =================
+# ================= CSS Styling =================
 st.markdown("""
 <style>
 body {
-    background-color: #0e1117;
+    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
 }
 .main {
-    background-color: #0e1117;
+    background-color: transparent;
 }
-h1, h2, h3 {
-    color: #00f5d4;
+h1 {
+    color: #00ffd5;
+    text-align: center;
+}
+h2, h3 {
+    color: #ffcc00;
 }
 .card {
-    background: #161b22;
+    background: linear-gradient(145deg, #141e30, #243b55);
     padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0px 0px 25px rgba(0,255,213,0.25);
+    margin-bottom: 20px;
+}
+.ad-card {
+    background: linear-gradient(135deg, #ff512f, #dd2476);
+    padding: 15px;
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,245,212,0.15);
+    color: white;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255,81,47,0.6);
+}
+.price-box {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 30px rgba(0,198,255,0.7);
 }
 .footer {
     text-align: center;
-    color: gray;
-    margin-top: 30px;
+    color: #ddd;
+    margin-top: 40px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -43,50 +63,71 @@ model_columns = data["columns"]
 
 # ================= Header =================
 st.markdown("<h1>🚗 AI Used Car Price Predictor</h1>", unsafe_allow_html=True)
-st.markdown("##### Predict resale value using Machine Learning", unsafe_allow_html=True)
+st.markdown("### 🔮 Smart • Colorful • Futuristic ML App")
+st.markdown("---")
+
+# ================= Hero Section =================
+st.image(
+    "https://cdn.pixabay.com/photo/2016/11/29/09/32/car-1869823_1280.jpg",
+    use_container_width=True
+)
+
 st.markdown("---")
 
 # ================= Layout =================
-left, right = st.columns([1.2, 1])
+left, center, right = st.columns([1.2, 1.5, 1])
 
-# ================= Inputs =================
+# ================= INPUTS =================
 with left:
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("🔧 Car Specifications")
+    st.subheader("🔧 Car Details")
 
-    year = st.slider("Year of Manufacture", 1995, 2025, 2018)
-    kms_driven = st.slider("Kilometers Driven", 0, 200000, 50000)
-    seats = st.selectbox("Seats", [2, 4, 5, 6, 7])
+    year = st.slider("📅 Manufacturing Year", 1995, 2025, 2018)
+    kms = st.slider("🛣️ Kilometers Driven", 0, 200000, 50000)
+    seats = st.selectbox("💺 Seats", [2, 4, 5, 6, 7])
+    owner = st.selectbox("👤 Owner Type", ["First", "Second", "Third", "Fourth & Above"])
+    fuel = st.selectbox("⛽ Fuel Type", ["Petrol", "Diesel", "CNG", "LPG", "Electric"])
+    transmission = st.selectbox("⚙️ Transmission", ["Manual", "Automatic"])
 
-    fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "LPG", "Electric"])
-    transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
-    owner_type = st.selectbox("Owner Type", ["First", "Second", "Third", "Fourth & Above"])
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with center:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🚀 Performance")
+
+    mileage = st.slider("📊 Mileage (km/l)", 5.0, 35.0, 18.0)
+    engine = st.slider("🔩 Engine (CC)", 500, 4000, 1200)
+    power = st.slider("⚡ Power (bhp)", 40.0, 400.0, 90.0)
+    new_price = st.slider("💰 New Car Price (Lakhs ₹)", 2.0, 50.0, 8.0)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
 with right:
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("⚙️ Engine & Performance")
-
-    mileage = st.slider("Mileage (km/l)", 5.0, 35.0, 18.0)
-    engine = st.slider("Engine Capacity (CC)", 500, 4000, 1200)
-    power = st.slider("Power (bhp)", 40.0, 400.0, 90.0)
-    new_price = st.slider("New Car Price (Lakhs ₹)", 2.0, 50.0, 8.0)
-
+    st.markdown('<div class="ad-card">', unsafe_allow_html=True)
+    st.subheader("🔥 Sponsored Ad")
+    st.write("🚘 **Buy New Cars at Best Price!**")
+    st.write("💸 Zero Down Payment")
+    st.write("📞 Call: 1800-FAKE-AD")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ================= Prepare Input =================
+    st.image(
+        "https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif",
+        caption="AI analysing your car 🚀",
+        use_container_width=True
+    )
+
+# ================= Input Processing =================
 input_dict = {
     "Year": year,
-    "Kilometers_Driven": kms_driven,
+    "Kilometers_Driven": kms,
     "Mileage": mileage,
     "Engine": engine,
     "Power": power,
     "Seats": seats,
     "New_Price": new_price,
-    "Fuel_Type": fuel_type,
+    "Fuel_Type": fuel,
     "Transmission": transmission,
-    "Owner_Type": owner_type
+    "Owner_Type": owner
 }
 
 input_df = pd.DataFrame([input_dict])
@@ -101,15 +142,15 @@ input_df = input_df.reindex(columns=model_columns, fill_value=0)
 
 # ================= Prediction =================
 st.markdown("---")
-center = st.columns(3)[1]
+predict_col = st.columns(3)[1]
 
-with center:
-    if st.button("🚀 Predict Price", use_container_width=True):
+with predict_col:
+    if st.button("🚀 PREDICT PRICE", use_container_width=True):
         prediction = model.predict(input_df)
         st.markdown(
             f"""
-            <div class="card">
-                <h2>💰 Estimated Price</h2>
+            <div class="price-box">
+                <h2>💎 Estimated Car Value</h2>
                 <h1>₹ {round(prediction[0], 2)} Lakhs</h1>
             </div>
             """,
@@ -118,6 +159,6 @@ with center:
 
 # ================= Footer =================
 st.markdown(
-    '<div class="footer">Built with ❤️ using Streamlit & Machine Learning</div>',
+    '<div class="footer">✨ Built with Streamlit • Machine Learning • AI ✨</div>',
     unsafe_allow_html=True
 )
