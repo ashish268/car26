@@ -131,7 +131,7 @@ st.markdown("""
 <div class="ad">
 🚘 <b>LIMITED TIME OFFER!</b><br>
 Get <b>FREE Car Inspection</b> + <b>Best Resale Value</b><br>
-📞 Call Now: 1800-CAR-AI
+📞 Call Now: 1800-1200-10
 </div>
 """, unsafe_allow_html=True)
 
