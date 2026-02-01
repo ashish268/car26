@@ -169,7 +169,8 @@ mid = st.columns(3)[1]
 
 with mid:
     if st.button("🚀 PREDICT PRICE", use_container_width=True):
-        prediction = model.predict(input_df)[0]
+    st.markdown("<script>playSound()</script>", unsafe_allow_html=True)
+    prediction = model.predict(input_df)[0]
 
         st.markdown(
             f"""
