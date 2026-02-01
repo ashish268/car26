@@ -1,59 +1,64 @@
 import streamlit as st
-import pandas as pd
-import random
-from sklearn.preprocessing import StandardScaler
 import pickle
-col = ['MedInc', 'HouseAge', 'AveRooms', 'AveBedrms', 'Population', 'AveOccup']
-st.title("California Housing price prediction")
-st.image('https://0701.static.prezi.com/preview/v2/f524s3b7ixvvb7lkkxa2ouskoh6jc3sachvcdoaizecfr3dnitcq_3_0.png')
-st.header('Model of housing prices to predict median house values in California',divider=True)
+import numpy as np
+import pandas as pd
 
-st.sidebar.title('Select House Features 🏠')
-st.sidebar.image('https://cdn.pixabay.com/photo/2016/08/16/03/39/home-1597079_1280.jpg')
-st.sidebar.image('https://static.vecteezy.com/system/resources/previews/026/586/537/large_2x/beautiful-modern-house-exterior-with-grass-field-modern-residential-district-and-minimalist-building-concept-by-ai-generated-free-photo.jpg')
+# ================= Load model & columns =================
+data = pickle.load(open("used_car_model.pkl", "rb"))
+model = data["model"]
+model_columns = data["columns"]
 
-temp_df = pd.read_csv('california.csv')
+st.set_page_config(page_title="Used Car Price Prediction", layout="centered")
 
-temp_df = pd.read_csv('california.csv')
-random.seed(52)
-all_values= []
-for i in temp_df[col]:
-    min_value, max_value = temp_df[i].agg(['min','max'])
+st.title("🚗 Used Car Price Prediction")
+st.write("Enter car details to predict the selling price")
 
-    var =st.sidebar.slider(f'Select {i} value', int(min_value), int(max_value),
-                      random.randint(int(min_value),int(max_value)))
-    all_values.append(var)
-ss=StandardScaler()
-ss.fit(temp_df[col])
+# ================= User Inputs =================
+year = st.number_input("Year of Manufacture", min_value=1995, max_value=2025, value=2018)
 
-final_value= ss.transform([all_values])
-with open('house_price_pred_ridge_model.pkl','rb') as f:
-   chatgpt= pickle.load(f)
-price= chatgpt.predict(final_value)[0]
-import time
-st.write(pd.DataFrame(dict(zip(col,all_values)),index =[1]))
+kms_driven = st.number_input("Kilometers Driven", min_value=0, value=50000)
 
-progress_bar = st.progress(0)
-placeholder = st.empty()
-placeholder.subheader('Predicting Price')
-place = st.empty()
-place.image('https://i.gifer.com/origin/a3/a3b1fa69178f24498a5250a9612d9e1f_w200.gif',width =70)
-if price>0:
+mileage = st.number_input("Mileage (km/l)", min_value=0.0, value=18.0)
 
-    for i in range(100):
-        time.sleep(0.05)
-        progress_bar.progress(i + 1)
+engine = st.number_input("Engine (CC)", min_value=500, value=1200)
 
-    body = f'Predicted Median House Price: ${round(price,2)} Thousand Dollars'
-    placeholder.empty()
-    place.empty()
-    # st.subheader(body)
+power = st.number_input("Power (bhp)", min_value=20.0, value=80.0)
 
-    st.success(body)
-else:
-    body = 'Invalid House features Values'
-    st.warning(body)
-    
-st.markdown('Designed by:**Ashish Luthra**')
+seats = st.selectbox("Seats", [2, 4, 5, 6, 7])
 
+new_price = st.number_input("New Car Price (in Lakhs)", min_value=0.0, value=8.0)
 
+fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "LPG", "Electric"])
+transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
+owner_type = st.selectbox("Owner Type", ["First", "Second", "Third", "Fourth & Above"])
+
+# ================= Create input dataframe =================
+input_dict = {
+    "Year": year,
+    "Kilometers_Driven": kms_driven,
+    "Mileage": mileage,
+    "Engine": engine,
+    "Power": power,
+    "Seats": seats,
+    "New_Price": new_price,
+    "Fuel_Type": fuel_type,
+    "Transmission": transmission,
+    "Owner_Type": owner_type
+}
+
+input_df = pd.DataFrame([input_dict])
+
+# Apply same encoding as training
+input_df = pd.get_dummies(
+    input_df,
+    columns=["Fuel_Type", "Transmission", "Owner_Type"],
+    drop_first=True
+)
+
+# Align input with training columns
+input_df = input_df.reindex(columns=model_columns, fill_value=0)
+
+# ================= Prediction =================
+if st.button("Predict Price"):
+    prediction = model.predict(input_df)
+    st.success(f"💰 Estimated Used Car Price: ₹ {round(prediction[0], 2)} Lakhs")
