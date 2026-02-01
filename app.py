@@ -11,11 +11,31 @@ st.set_page_config(
 )
 
 # ================= Background Music =================
-st.markdown("""
-<audio autoplay loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
-</audio>
-""", unsafe_allow_html=True)
+st.sidebar.subheader("🎵 Background Music")
+
+music_choice = st.sidebar.selectbox(
+    "Choose Music",
+    [
+        "Chill Tech",
+        "Luxury Drive",
+        "Future AI",
+        "No Music"
+    ]
+)
+
+music_links = {
+    "Chill Tech": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+    "Luxury Drive": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+    "Future AI": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"
+}
+
+if music_choice != "No Music":
+    st.markdown(f"""
+    <audio autoplay loop controls>
+      <source src="{music_links[music_choice]}" type="audio/mp3">
+    </audio>
+    """, unsafe_allow_html=True)
+
 
 # ================= CSS Styling =================
 st.markdown("""
