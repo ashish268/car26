@@ -30,8 +30,8 @@ if "auth_page" not in st.session_state:
 # ================= AUTH PAGES =================
 def login_page():
     st.markdown("<h1 style='text-align:center;'>🔐 Login</h1>", unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns([1, 2, 1])
+
     with col2:
         st.markdown("### 🚗 Used Car Price Predictor")
         username = st.text_input("👤 Username")
@@ -54,8 +54,8 @@ def login_page():
 
 def signup_page():
     st.markdown("<h1 style='text-align:center;'>📝 Sign Up</h1>", unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns([1, 2, 1])
+
     with col2:
         new_user = st.text_input("👤 Create Username")
         new_pass = st.text_input("🔑 Create Password", type="password")
@@ -97,27 +97,36 @@ if st.sidebar.button("🚪 Logout"):
     st.session_state.auth_page = "login"
     st.rerun()
 
-st.sidebar.info("AI Powered ML Application")
-st.sidebar.markdown("📊 Real-time Price Prediction")
-st.sidebar.markdown("🔐 Secure Login & Signup")
-st.sidebar.markdown("🚗 Used Car Valuation")
+# 🎵 Background Music
+st.sidebar.subheader("🎵 Background Music")
+music_choice = st.sidebar.selectbox(
+    "Choose Music",
+    ["Chill Tech", "Luxury Drive", "Future AI", "No Music"]
+)
+
+music_links = {
+    "Chill Tech": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+    "Luxury Drive": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+    "Future AI": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"
+}
+
+if music_choice != "No Music":
+    st.markdown(f"""
+    <audio autoplay loop controls>
+      <source src="{music_links[music_choice]}" type="audio/mp3">
+    </audio>
+    """, unsafe_allow_html=True)
 
 # ================= CSS =================
 st.markdown("""
 <style>
-body {
-    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
-}
-h1 {
-    color: #00ffd5;
-    text-align: center;
-}
+body { background: linear-gradient(120deg, #0f2027, #203a43, #2c5364); }
+h1 { color: #00ffd5; text-align: center; }
 .card {
     background: linear-gradient(145deg, #141e30, #243b55);
     padding: 20px;
     border-radius: 18px;
     box-shadow: 0 0 25px rgba(0,255,213,0.25);
-    margin-bottom: 20px;
 }
 .ad {
     background: linear-gradient(135deg, #ff512f, #dd2476);
@@ -126,9 +135,8 @@ h1 {
     color: white;
     text-align: center;
     font-size: 18px;
-    margin: 15px 0;
 }
-.gift-box, .price-box {
+.price-box, .gift-box {
     background: linear-gradient(135deg, #00c6ff, #0072ff);
     padding: 20px;
     border-radius: 20px;
@@ -155,6 +163,12 @@ st.markdown("""
 FREE Car Inspection + Best Resale Value
 </div>
 """, unsafe_allow_html=True)
+
+# ================= IMAGES =================
+img1, img2, img3 = st.columns(3)
+img1.image("https://www.carstreetindia.com/carstreet-login/uploads/blog/67a9c463c14951738923637_Carrera%201.jpeg", use_container_width=True)
+img2.image("https://content.jdmagicbox.com/comp/nashik/n8/0253px253.x253.140508132504.h3n8/catalogue/anand-auto-consultant-panchavati-nashik-second-hand-car-dealers-chevrolet-cpwvh0icvn.jpg", use_container_width=True)
+img3.image("https://www.kamdhenucars.com/assets/front/images/cars/3294/1756467960_mCdCzQu6.jpg", use_container_width=True)
 
 # ================= INPUTS =================
 left, right = st.columns(2)
@@ -209,14 +223,36 @@ if st.button("🚀 PREDICT PRICE", use_container_width=True):
     </div>
     """, unsafe_allow_html=True)
 
+    won_gift = random.choice([
+        "🎁 Free Car Wash Coupon",
+        "🎉 ₹500 Fuel Voucher",
+        "🎧 Free Bluetooth Car Speaker",
+        "🛠️ Free Car Health Check",
+        "🚘 Premium Car Cover"
+    ])
+
     st.markdown(f"""
     <div class="gift-box">
-        <h3>🎁 Bonus Gift</h3>
-        <p>{random.choice([
-            "Free Car Wash",
-            "₹500 Fuel Voucher",
-            "Car Health Check",
-            "Premium Car Cover"
-        ])}</p>
+        <h2>🎁 Congratulations!</h2>
+        <h3>You Won: {won_gift}</h3>
     </div>
     """, unsafe_allow_html=True)
+
+    st.image(
+        "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
+        caption="🎉 Surprise Gift Unlocked!",
+        use_container_width=True
+    )
+
+    chart_df = pd.DataFrame({
+        "Scenario": ["Low", "Predicted", "High"],
+        "Price (Lakhs)": [prediction * 0.85, prediction, prediction * 1.15]
+    })
+
+    chart = alt.Chart(chart_df).mark_bar().encode(
+        x="Scenario",
+        y="Price (Lakhs)",
+        color="Scenario"
+    )
+
+    st.altair_chart(chart, use_container_width=True)
