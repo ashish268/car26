@@ -211,7 +211,7 @@ if st.button("🚀 PREDICT PRICE", use_container_width=True):
     )
 
     st.image(
-        "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
+        
         caption="🎉 Surprise Gift Unlocked!",
         use_container_width=True
     )
