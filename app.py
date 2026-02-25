@@ -14,7 +14,8 @@ st.set_page_config(
 # ================= USER STORAGE =================
 if "users" not in st.session_state:
     st.session_state.users = {
-        "admin": "admin123"
+        "admin": "admin123",
+        "user": "car123"
     }
 
 if "logged_in" not in st.session_state:
@@ -23,12 +24,16 @@ if "logged_in" not in st.session_state:
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
 
+if "auth_page" not in st.session_state:
+    st.session_state.auth_page = "login"
+
 # ================= AUTH PAGES =================
 def login_page():
     st.markdown("<h1 style='text-align:center;'>🔐 Login</h1>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
+        st.markdown("### 🚗 Used Car Price Predictor")
         username = st.text_input("👤 Username")
         password = st.text_input("🔑 Password", type="password")
 
@@ -39,7 +44,7 @@ def login_page():
                 st.success("Login successful ✅")
                 st.rerun()
             else:
-                st.error("Invalid username or password ❌")
+                st.error("Invalid credentials ❌")
 
         st.markdown("---")
         if st.button("📝 New User? Sign Up"):
@@ -59,10 +64,10 @@ def signup_page():
         if st.button("✅ Create Account", use_container_width=True):
             if new_user in st.session_state.users:
                 st.error("Username already exists ❌")
-            elif new_pass != confirm_pass:
-                st.error("Passwords do not match ❌")
             elif new_user == "" or new_pass == "":
                 st.warning("Fields cannot be empty ⚠️")
+            elif new_pass != confirm_pass:
+                st.error("Passwords do not match ❌")
             else:
                 st.session_state.users[new_user] = new_pass
                 st.success("Account created successfully 🎉")
@@ -76,9 +81,6 @@ def signup_page():
 
 
 # ================= AUTH ROUTING =================
-if "auth_page" not in st.session_state:
-    st.session_state.auth_page = "login"
-
 if not st.session_state.logged_in:
     if st.session_state.auth_page == "login":
         login_page()
@@ -97,6 +99,7 @@ if st.sidebar.button("🚪 Logout"):
 
 st.sidebar.info("AI Powered ML Application")
 st.sidebar.markdown("📊 Real-time Price Prediction")
+st.sidebar.markdown("🔐 Secure Login & Signup")
 st.sidebar.markdown("🚗 Used Car Valuation")
 
 # ================= CSS =================
@@ -105,19 +108,32 @@ st.markdown("""
 body {
     background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
 }
-h1 { color: #00ffd5; text-align: center; }
+h1 {
+    color: #00ffd5;
+    text-align: center;
+}
 .card {
     background: linear-gradient(145deg, #141e30, #243b55);
     padding: 20px;
     border-radius: 18px;
     box-shadow: 0 0 25px rgba(0,255,213,0.25);
+    margin-bottom: 20px;
 }
-.price-box, .gift-box {
+.ad {
+    background: linear-gradient(135deg, #ff512f, #dd2476);
+    padding: 18px;
+    border-radius: 18px;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    margin: 15px 0;
+}
+.gift-box, .price-box {
     background: linear-gradient(135deg, #00c6ff, #0072ff);
     padding: 20px;
-    border-radius: 18px;
-    text-align: center;
+    border-radius: 20px;
     color: white;
+    text-align: center;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -129,7 +145,16 @@ model_columns = data["columns"]
 
 # ================= HEADER =================
 st.markdown("<h1>🚗 AI Used Car Price Predictor</h1>", unsafe_allow_html=True)
+st.markdown("### Smart • Commercial • Futuristic ML App")
 st.markdown("---")
+
+# ================= MAIN AD =================
+st.markdown("""
+<div class="ad">
+🚘 <b>LIMITED TIME OFFER!</b><br>
+FREE Car Inspection + Best Resale Value
+</div>
+""", unsafe_allow_html=True)
 
 # ================= INPUTS =================
 left, right = st.columns(2)
@@ -179,14 +204,14 @@ if st.button("🚀 PREDICT PRICE", use_container_width=True):
 
     st.markdown(f"""
     <div class="price-box">
-        <h2>Estimated Price</h2>
+        <h2>💎 Estimated Car Value</h2>
         <h1>₹ {round(prediction, 2)} Lakhs</h1>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown(f"""
     <div class="gift-box">
-        <h3>🎁 Bonus Reward</h3>
+        <h3>🎁 Bonus Gift</h3>
         <p>{random.choice([
             "Free Car Wash",
             "₹500 Fuel Voucher",
