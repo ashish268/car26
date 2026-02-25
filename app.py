@@ -51,25 +51,10 @@ if st.sidebar.button("🚪 Logout"):
     st.session_state.logged_in = False
     st.rerun()
 
-st.sidebar.subheader("🎵 Background Music")
-
-music_choice = st.sidebar.selectbox(
-    "Choose Music",
-    ["Chill Tech", "Luxury Drive", "Future AI", "No Music"]
-)
-
-music_links = {
-    "Chill Tech": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-    "Luxury Drive": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-    "Future AI": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"
-}
-
-if music_choice != "No Music":
-    st.markdown(f"""
-    <audio autoplay loop controls>
-      <source src="{music_links[music_choice]}" type="audio/mp3">
-    </audio>
-    """, unsafe_allow_html=True)
+st.sidebar.info("AI Powered ML Application")
+st.sidebar.markdown("📊 Real-time Price Prediction")
+st.sidebar.markdown("🔐 Secure Login System")
+st.sidebar.markdown("🚗 Used Car Valuation")
 
 # ================= CSS =================
 st.markdown("""
@@ -126,7 +111,7 @@ st.markdown("<h1>🚗 AI Used Car Price Predictor</h1>", unsafe_allow_html=True)
 st.markdown("### Smart • Commercial • Futuristic ML App")
 st.markdown("---")
 
-# ================= MAIN ADS =================
+# ================= MAIN AD =================
 st.markdown("""
 <div class="ad">
 🚘 <b>LIMITED TIME OFFER!</b><br>
@@ -153,7 +138,7 @@ st.sidebar.image(
 )
 
 # ================= INPUTS =================
-left, center = st.columns(2)
+left, right = st.columns(2)
 
 with left:
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -165,7 +150,7 @@ with left:
     transmission = st.selectbox("⚙️ Transmission", ["Manual", "Automatic"])
     st.markdown('</div>', unsafe_allow_html=True)
 
-with center:
+with right:
     st.markdown('<div class="card">', unsafe_allow_html=True)
     mileage = st.slider("📊 Mileage (km/l)", 5.0, 35.0, 18.0)
     engine = st.slider("🔩 Engine (CC)", 500, 4000, 1200)
@@ -198,7 +183,8 @@ input_df = input_df.reindex(columns=model_columns, fill_value=0)
 # ================= PREDICTION =================
 st.markdown("---")
 if st.button("🚀 PREDICT PRICE", use_container_width=True):
-    prediction = model.predict(input_df)[0]
+    with st.spinner("Predicting car value..."):
+        prediction = model.predict(input_df)[0]
 
     st.markdown(
         f"""
@@ -210,7 +196,6 @@ if st.button("🚀 PREDICT PRICE", use_container_width=True):
         unsafe_allow_html=True
     )
 
-    # 🎁 Gift System
     gifts = [
         "🎁 Free Car Wash Coupon",
         "🎉 ₹500 Fuel Voucher",
@@ -231,13 +216,6 @@ if st.button("🚀 PREDICT PRICE", use_container_width=True):
         unsafe_allow_html=True
     )
 
-    st.image(
-        "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
-        caption="🎉 Surprise Gift Unlocked!",
-        use_container_width=True
-    )
-
-    # 📊 Animated Chart
     chart_df = pd.DataFrame({
         "Scenario": ["Low", "Predicted", "High"],
         "Price (Lakhs)": [prediction * 0.85, prediction, prediction * 1.15]
