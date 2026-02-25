@@ -124,7 +124,7 @@ img3.image("https://www.kamdhenucars.com/assets/front/images/cars/3294/175646796
 # ================= SIDEBAR ADS =================
 st.sidebar.markdown("### 🏷️ Sponsored Ads")
 st.sidebar.image(
-    "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
+    "https://motoringworld.in/wp-content/uploads/2024/08/Roxx-106-scaled.jpg",
     caption="Mahindra Thar – Book Today!"
 )
 st.sidebar.image(
