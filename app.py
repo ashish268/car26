@@ -210,11 +210,7 @@ if st.button("🚀 PREDICT PRICE", use_container_width=True):
         unsafe_allow_html=True
     )
 
-    st.image(
-        
-        caption="🎉 Surprise Gift Unlocked!",
-        use_container_width=True
-    )
+   
 
     chart_df = pd.DataFrame({
         "Scenario": ["Low", "Predicted", "High"],
