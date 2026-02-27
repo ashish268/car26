@@ -1,75 +1,241 @@
 import streamlit as st
 import pickle
 import pandas as pd
-import numpy as np
+import altair as alt
+import random
 
-# ---------------- LOAD MODEL ----------------
-model_data = pickle.load(open("used_car_model.pkl", "rb"))
-model = model_data["model"]
-model_columns = model_data["columns"]
+# ================= LOGIN SETUP =================
+VALID_USERS = {
+    "admin": "admin123",
+    "user": "car123"
+}
 
-st.title("🚗 Used Car Price Prediction")
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
-# ---------------- USER INPUTS ----------------
-year = st.number_input("Year of Purchase", min_value=1995, max_value=2025, value=2015)
-km = st.number_input("Kilometers Driven", min_value=0, value=50000)
-seats = st.number_input("Seats", min_value=2, max_value=10, value=5)
 
-fuel = st.selectbox("Fuel Type", ["Petrol", "Diesel", "Electric", "LPG"])
-transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
-owner = st.selectbox("Owner Type", ["First", "Second", "Third", "Fourth & Above"])
+def login_page():
+    st.markdown("<h1 style='text-align:center;'>🔐 Login</h1>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
 
-brand = st.selectbox(
-    "Car Brand",
-    [
-        "Audi","BMW","Bentley","Chevrolet","Datsun","Fiat","Force","Ford",
-        "Hindustan","Honda","Hyundai","ISUZU","Isuzu","Jaguar","Jeep",
-        "Lamborghini","Land","Mahindra","Maruti","Mercedes-Benz","Mini",
-        "Mitsubishi","Nissan","OpelCorsa","Porsche","Renault","Skoda",
-        "Smart","Tata","Toyota","Volkswagen","Volvo"
-    ]
+    with col2:
+        st.markdown("### 🚗 Used Car Price Predictor")
+        username = st.text_input("👤 Username")
+        password = st.text_input("🔑 Password", type="password")
+
+        if st.button("🚀 Login", use_container_width=True):
+            if username in VALID_USERS and VALID_USERS[username] == password:
+                st.session_state.logged_in = True
+                st.success("Login successful ✅")
+                st.rerun()
+            else:
+                st.error("Invalid credentials ❌")
+
+
+# ================= PAGE CONFIG =================
+st.set_page_config(
+    page_title="AI Used Car Price Predictor",
+    page_icon="🚗",
+    layout="wide"
 )
 
-# ---------------- PREDICTION ----------------
-if st.button("Predict Price"):
+# ================= LOGIN CHECK =================
+if not st.session_state.logged_in:
+    login_page()
+    st.stop()
 
-    # Create input dataframe with ALL training columns
-    input_df = pd.DataFrame(
-        np.zeros((1, len(model_columns))),
-        columns=model_columns
+# ================= SIDEBAR =================
+st.sidebar.success("Logged in ✅")
+
+if st.sidebar.button("🚪 Logout"):
+    st.session_state.logged_in = False
+    st.rerun()
+
+# ================= CSS =================
+st.markdown("""
+<style>
+body {
+    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+}
+h1 {
+    color: #00ffd5;
+    text-align: center;
+}
+.card {
+    background: linear-gradient(145deg, #141e30, #243b55);
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 0 25px rgba(0,255,213,0.25);
+    margin-bottom: 20px;
+}
+.ad {
+    background: linear-gradient(135deg, #ff512f, #dd2476);
+    padding: 18px;
+    border-radius: 18px;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    margin: 15px 0;
+    box-shadow: 0 0 20px rgba(255,81,47,0.6);
+}
+.gift-box {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+}
+.price-box {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ================= LOAD MODEL =================
+data = pickle.load(open("used_car_model.pkl", "rb"))
+model = data["model"]
+model_columns = data["columns"]
+
+# ================= HEADER =================
+st.markdown("<h1>🚗 AI Used Car Price Predictor</h1>", unsafe_allow_html=True)
+st.markdown("### Smart • Commercial • Futuristic ML App")
+st.markdown("---")
+
+# ================= MAIN ADS =================
+st.markdown("""
+<div class="ad">
+🚘 <b>LIMITED TIME OFFER!</b><br>
+Get <b>FREE Car Inspection</b> + <b>Best Resale Value</b><br>
+📞 Call Now: 1800-1200-10
+</div>
+""", unsafe_allow_html=True)
+
+# ================= IMAGES =================
+img1, img2, img3 = st.columns(3)
+img1.image("https://www.carstreetindia.com/carstreet-login/uploads/blog/67a9c463c14951738923637_Carrera%201.jpeg", use_container_width=True)
+img2.image("https://content.jdmagicbox.com/comp/nashik/n8/0253px253.x253.140508132504.h3n8/catalogue/anand-auto-consultant-panchavati-nashik-second-hand-car-dealers-chevrolet-cpwvh0icvn.jpg", use_container_width=True)
+img3.image("https://www.kamdhenucars.com/assets/front/images/cars/3294/1756467960_mCdCzQu6.jpg", use_container_width=True)
+
+# ================= SIDEBAR ADS =================
+st.sidebar.markdown("### 🏷️ Sponsored Ads")
+st.sidebar.image(
+    "https://motoringworld.in/wp-content/uploads/2024/08/Roxx-106-scaled.jpg",
+    caption="Mahindra Thar – Book Today!"
+)
+st.sidebar.image(
+    "https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg",
+    caption="Hyundai Creta – Best Seller"
+)
+
+# ================= INPUTS =================
+left, center = st.columns(2)
+
+with left:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    year = st.slider("📅 Year", 1995, 2025, 2018)
+    kms = st.slider("🛣️ Kilometers Driven", 0, 200000, 50000)
+    seats = st.selectbox("💺 Seats", [2, 4, 5, 6, 7])
+    owner = st.selectbox("👤 Owner Type", ["First", "Second", "Third", "Fourth & Above"])
+    fuel = st.selectbox("⛽ Fuel Type", ["Petrol", "Diesel", "CNG", "LPG", "Electric"])
+    transmission = st.selectbox("⚙️ Transmission", ["Manual", "Automatic"])
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with center:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    mileage = st.slider("📊 Mileage (km/l)", 5.0, 35.0, 18.0)
+    engine = st.slider("🔩 Engine (CC)", 500, 4000, 1200)
+    power = st.slider("⚡ Power (bhp)", 40.0, 400.0, 90.0)
+    new_price = st.slider("💰 New Price (Lakhs ₹)", 2.0, 50.0, 8.0)
+    brand = st.selectbox(
+        "🚗 Car Brand",
+        [
+            "Audi","BMW","Bentley","Chevrolet","Datsun","Fiat","Force","Ford",
+            "Hindustan","Honda","Hyundai","ISUZU","Isuzu","Jaguar","Jeep",
+            "Lamborghini","Land","Mahindra","Maruti","Mercedes-Benz","Mini",
+            "Mitsubishi","Nissan","OpelCorsa","Porsche","Renault","Skoda",
+            "Smart","Tata","Toyota","Volkswagen","Volvo"
+        ]
+    )
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ================= PREPARE INPUT =================
+input_dict = {
+    "Year": year,
+    "Kilometers_Driven": kms,
+    "Mileage": mileage,
+    "Engine": engine,
+    "Power": power,
+    "Seats": seats,
+    "New_Price": new_price,
+    "Fuel_Type": fuel,
+    "Transmission": transmission,
+    "Owner_Type": owner
+}
+
+input_df = pd.DataFrame([input_dict])
+input_df = pd.get_dummies(
+    input_df,
+    columns=["Fuel_Type", "Transmission", "Owner_Type"],
+    drop_first=True
+)
+
+# 🔹 BRAND ONE-HOT (ONLY ADDITION)
+brand_col = f"Brand_{brand}"
+input_df[brand_col] = 1
+
+# Align with training columns
+input_df = input_df.reindex(columns=model_columns, fill_value=0)
+
+# ================= PREDICTION =================
+st.markdown("---")
+if st.button("🚀 PREDICT PRICE", use_container_width=True):
+    prediction = model.predict(input_df)[0]
+    prediction = max(prediction, 0)
+
+    st.markdown(
+        f"""
+        <div class="price-box">
+            <h2>💎 Estimated Car Value</h2>
+            <h1>₹ {round(prediction, 2)} Lakhs</h1>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-    # Numeric features
-    if "Year" in input_df.columns:
-        input_df["Year"] = year
-    if "Kilometers_Driven" in input_df.columns:
-        input_df["Kilometers_Driven"] = km
-    if "Seats" in input_df.columns:
-        input_df["Seats"] = seats
+    gifts = [
+        "🎁 Free Car Wash Coupon",
+        "🎉 ₹500 Fuel Voucher",
+        "🎧 Free Bluetooth Car Speaker",
+        "🛠️ Free Car Health Check",
+        "🚘 Premium Car Cover"
+    ]
 
-    # Fuel type
-    fuel_col = f"Fuel_Type_{fuel}"
-    if fuel_col in input_df.columns:
-        input_df[fuel_col] = 1
+    won_gift = random.choice(gifts)
 
-    # Transmission
-    if transmission == "Manual" and "Transmission_Manual" in input_df.columns:
-        input_df["Transmission_Manual"] = 1
+    st.markdown(
+        f"""
+        <div class="gift-box">
+            <h2>🎁 Congratulations!</h2>
+            <h3>You Won: {won_gift}</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-    # Owner type
-    owner_col = f"Owner_Type_{owner}"
-    if owner_col in input_df.columns:
-        input_df[owner_col] = 1
+    chart_df = pd.DataFrame({
+        "Scenario": ["Low", "Predicted", "High"],
+        "Price (Lakhs)": [prediction * 0.85, prediction, prediction * 1.15]
+    })
 
-    # -------- BRAND (MAIN ADDITION) --------
-    brand_col = f"Brand_{brand}"
-    if brand_col in input_df.columns:
-        input_df[brand_col] = 1
+    chart = alt.Chart(chart_df).mark_bar().encode(
+        x="Scenario",
+        y="Price (Lakhs)",
+        color="Scenario"
+    )
 
-    # Predict
-price = model.predict(input_df)[0]
-
-# Fix unrealistic negative prediction
-price = max(price, 0)
-
-st.success(f"💰 Estimated Car Price: ₹ {price:.2f} Lakhs")
+    st.altair_chart(chart, use_container_width=True)
