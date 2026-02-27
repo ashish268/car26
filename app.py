@@ -62,7 +62,7 @@ with left:
     year = st.slider("📅 Year", 1996, 2019, 2015)
     kms = st.slider("🛣️ Kilometers Driven", 0, 200000, 50000)
     seats = st.selectbox("💺 Seats", [2, 4, 5, 6, 7])
-    owner = st.selectbox("👤 Owner Type", ["First", "Second", "Third", "Fourth & Above"])
+    owner = st.selectbox("👤 Owner Type", ["First", "Second"])
     fuel = st.selectbox("⛽ Fuel Type", ["Petrol", "Diesel", "Electric", "LPG"])
     transmission = st.selectbox("⚙️ Transmission", ["Manual", "Automatic"])
 
