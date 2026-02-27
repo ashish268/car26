@@ -67,7 +67,7 @@ if st.button("Predict Price"):
         input_df[brand_col] = 1
 
     # Predict
-    price = model.predict(input_df)[0]
+price = model.predict(input_df)[0]
 
 # Fix unrealistic negative prediction
 price = max(price, 0)
