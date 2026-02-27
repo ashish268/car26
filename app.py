@@ -184,13 +184,15 @@ input_df = input_df.reindex(columns=model_columns, fill_value=0)
 
 # ================= PREDICTION =================
 # ----------------- BRAND ENCODING -----------------
+# initialize all brand columns to 0
 for col in model_columns:
     if col.startswith("Brand_"):
-        input_data[col] = 0
+        input_df[col] = 0
 
+# set selected brand = 1
 brand_column = "Brand_" + brand
-if brand_column in input_data.columns:
-    input_data[brand_column] = 1
+if brand_column in input_df.columns:
+    input_df[brand_column] = 1
 
 st.markdown("---")
 if st.button("🚀 PREDICT PRICE", use_container_width=True):
