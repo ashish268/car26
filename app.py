@@ -149,7 +149,6 @@ with center:
     st.markdown('<div class="card">', unsafe_allow_html=True)
     mileage = st.slider("📊 Mileage (km/l)", 5.0, 35.0, 18.0)
     engine = st.slider("🔩 Engine (CC)", 500, 4000, 1200)
-    power = st.slider("⚡ Power (bhp)", 40.0, 400.0, 90.0)
     new_price = st.slider("💰 New Price (Lakhs ₹)", 2.0, 50.0, 8.0)
     brand = st.selectbox(
         "🚗 Car Brand",
