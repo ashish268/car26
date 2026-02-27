@@ -69,7 +69,6 @@ with left:
 with right:
     mileage = st.slider("📊 Mileage (km/l)", 5.0, 35.0, 18.0)
     engine = st.slider("🔩 Engine (CC)", 500, 4000, 1200)
-    
 
     brand = st.selectbox(
         "🚗 Car Brand",
@@ -92,9 +91,8 @@ input_dict = {
     "Kilometers_Driven": kms,
     "Mileage": mileage,
     "Engine": engine,
-    "Power": power,              # still passed to model
+    "Power": power,
     "Seats": seats,
-    "New_Price": new_price,
     "Fuel_Type": fuel,
     "Transmission": transmission,
     "Owner_Type": owner
