@@ -68,4 +68,8 @@ if st.button("Predict Price"):
 
     # Predict
     price = model.predict(input_df)[0]
-    st.success(f"💰 Estimated Car Price: ₹ {price:.2f} Lakhs")
+
+# Fix unrealistic negative prediction
+price = max(price, 0)
+
+st.success(f"💰 Estimated Car Price: ₹ {price:.2f} Lakhs")
