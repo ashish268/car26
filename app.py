@@ -166,7 +166,14 @@ input_dict = {
     "Transmission": transmission,
     "Owner_Type": owner
 }
-
+brand_list = [
+    "Audi","BMW","Bentley","Chevrolet","Datsun","Fiat","Force","Ford",
+    "Hindustan","Honda","Hyundai","ISUZU","Isuzu","Jaguar","Jeep",
+    "Lamborghini","Land","Mahindra","Maruti","Mercedes-Benz","Mini",
+    "Mitsubishi","Nissan","OpelCorsa","Porsche","Renault","Skoda",
+    "Smart","Tata","Toyota","Volkswagen","Volvo"
+]
+input_data = pd.DataFrame([data])
 input_df = pd.DataFrame([input_dict])
 input_df = pd.get_dummies(
     input_df,
@@ -176,6 +183,15 @@ input_df = pd.get_dummies(
 input_df = input_df.reindex(columns=model_columns, fill_value=0)
 
 # ================= PREDICTION =================
+# ----------------- BRAND ENCODING -----------------
+for col in model_columns:
+    if col.startswith("Brand_"):
+        input_data[col] = 0
+
+brand_column = "Brand_" + brand
+if brand_column in input_data.columns:
+    input_data[brand_column] = 1
+
 st.markdown("---")
 if st.button("🚀 PREDICT PRICE", use_container_width=True):
     prediction = model.predict(input_df)[0]
