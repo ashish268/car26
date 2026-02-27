@@ -137,7 +137,7 @@ left, center = st.columns(2)
 
 with left:
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    year = st.slider("📅 Year", 1995, 2025, 2018)
+    year = st.slider("📅 Year", 1996, 2019, 2015)
     kms = st.slider("🛣️ Kilometers Driven", 0, 200000, 50000)
     seats = st.selectbox("💺 Seats", [2, 4, 5, 6, 7])
     owner = st.selectbox("👤 Owner Type", ["First", "Second", "Third", "Fourth & Above"])
