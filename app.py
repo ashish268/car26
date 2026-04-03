@@ -1,72 +1,110 @@
 import streamlit as st
 import joblib
 import pandas as pd
+import altair as alt
+import numpy as np
 
-# ==============================
-# Load Model (from dict)
-# ==============================
-data = joblib.load("car_model.pkl")
-model = data['model']          # pipeline model
-columns = data['columns']      # training columns
-
-# ==============================
-# Login System
-# ==============================
-PASSWORD = "12345"
+# ================= LOGIN SETUP =================
+VALID_USERS = {
+    "admin": "12345"
+}
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-def login():
-    st.title("🔐 Login Page")
-    pwd = st.text_input("Enter Password", type="password")
 
-    if st.button("Login"):
-        if pwd == PASSWORD:
-            st.session_state.logged_in = True
-            st.success("Login Successful ✅")
-        else:
-            st.error("Wrong Password ❌")
+def login_page():
+    st.markdown("<h1 style='text-align:center;'>🔐 Login</h1>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
 
-# ==============================
-# Prediction Page
-# ==============================
-def prediction_page():
-    st.title("🚗 Used Car Price Prediction")
+    with col2:
+        st.markdown("### 🚗 Used Car Price Predictor")
+        username = st.text_input("👤 Username")
+        password = st.text_input("🔑 Password", type="password")
 
-    # Example inputs (modify based on your dataset)
-    brand = st.text_input("Brand")
-    km_driven = st.number_input("KM Driven", 0)
-    fuel = st.text_input("Fuel Type")
-    car_age = st.number_input("Car Age", 0)
+        if st.button("🚀 Login", use_container_width=True):
+            if username in VALID_USERS and VALID_USERS[username] == password:
+                st.session_state.logged_in = True
+                st.success("Login successful ✅")
+                st.rerun()
+            else:
+                st.error("Invalid credentials ❌")
 
-    if st.button("Predict Price"):
-        # Create input dataframe
-        input_dict = {
-            'brand': brand,
-            'km_driven': km_driven,
-            'fuel': fuel,
-            'car_age': car_age
-        }
 
-        input_df = pd.DataFrame([input_dict])
+# ================= PAGE CONFIG =================
+st.set_page_config(
+    page_title="AI Used Car Price Predictor",
+    page_icon="🚗",
+    layout="wide"
+)
 
-        # Ensure same columns as training
-        for col in columns:
-            if col not in input_df:
-                input_df[col] = 0
-
-        input_df = input_df[columns]
-
-        # Prediction
-        prediction = model.predict(input_df)
-
-        st.success(f"Estimated Price: ₹ {int(prediction[0])}")
-
-# ==============================
-# Main Flow
-# ==============================
+# ================= LOGIN CHECK =================
 if not st.session_state.logged_in:
-    login()
-else:
-    prediction_page()
+    login_page()
+    st.stop()
+
+# ================= LOAD MODEL =================
+data = joblib.load("car_model.pkl")
+model = data["model"]        # pipeline model
+columns = data["columns"]
+
+# ================= HEADER =================
+st.markdown("<h1>🚗 AI Used Car Price Predictor</h1>", unsafe_allow_html=True)
+st.markdown("### Smart • Commercial • Futuristic ML App")
+st.markdown("---")
+
+# ================= INPUTS =================
+left, right = st.columns(2)
+
+with left:
+    year = st.slider("📅 Year", 1996, 2019, 2015)
+    kms = st.slider("🛣️ Kilometers Driven", 0, 200000, 50000)
+    seats = st.selectbox("💺 Seats", [2, 4, 5, 6, 7])
+    owner = st.selectbox("👤 Owner Type", ["First", "Second", "Third", "Fourth & Above"])
+    fuel = st.selectbox("⛽ Fuel Type", ["Petrol", "Diesel", "Electric", "LPG"])
+    transmission = st.selectbox("⚙️ Transmission", ["Manual", "Automatic"])
+
+with right:
+    mileage = st.slider("📊 Mileage (km/l)", 5.0, 35.0, 18.0)
+    engine = st.slider("🔩 Engine (CC)", 500, 4000, 1200)
+    new_price = st.slider("💰 New Price (Lakhs ₹)", 2.0, 50.0, 8.0)
+
+    brand = st.selectbox(
+        "🚗 Car Brand",
+        [
+            "Audi","BMW","Bentley","Chevrolet","Datsun","Fiat","Force","Ford",
+            "Hindustan","Honda","Hyundai","ISUZU","Isuzu","Jaguar","Jeep",
+            "Lamborghini","Land","Mahindra","Maruti","Mercedes-Benz","Mini",
+            "Mitsubishi","Nissan","OpelCorsa","Porsche","Renault","Skoda",
+            "Smart","Tata","Toyota","Volkswagen","Volvo"
+        ]
+    )
+
+# ================= DEFAULT POWER =================
+power = 90  # default value
+
+# ================= PREPARE INPUT =================
+input_dict = {
+    "Year": year,
+    "Kilometers_Driven": kms,
+    "Mileage": mileage,
+    "Engine": engine,
+    "Power": power,
+    "Seats": seats,
+    "New_Price": new_price,
+    "Fuel_Type": fuel,
+    "Transmission": transmission,
+    "Owner_Type": owner,
+    "Brand": brand
+}
+
+input_df = pd.DataFrame([input_dict])
+
+# ================= PREDICTION =================
+st.markdown("---")
+if st.button("🚀 PREDICT PRICE", use_container_width=True):
+    prediction = model.predict(input_df)[0]
+    prediction = max(prediction, 0)
+
+    st.success(f"💰 Estimated Car Price: ₹ {round(prediction, 2)} Lakhs")
+
