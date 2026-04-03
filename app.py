@@ -2,10 +2,10 @@ import streamlit as st
 import pickle
 import pandas as pd
 import os
- 
+
 # ================= PAGE CONFIG =================
 st.set_page_config(page_title="Car Price Predictor", layout="wide", page_icon="🚗")
- 
+
 # ================= CUSTOM CSS =================
 st.markdown("""
 <style>
@@ -61,13 +61,13 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
- 
+
 # ================= LOGIN =================
 VALID_USERS = {"admin": "12345"}
- 
+
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
- 
+
 def login():
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
@@ -82,11 +82,11 @@ def login():
                 st.rerun()
             else:
                 st.error("Invalid credentials ❌")
- 
+
 if not st.session_state.logged_in:
     login()
     st.stop()
- 
+
 # ================= LOAD MODEL =================
 model = None
 for path in ["car_model.pkl", "./car_model.pkl", "models/car_model.pkl"]:
@@ -98,30 +98,100 @@ for path in ["car_model.pkl", "./car_model.pkl", "models/car_model.pkl"]:
         except Exception as e:
             st.error(f"❌ Error loading model: {e}")
             st.stop()
- 
+
 if model is None:
     st.error("❌ car_model.pkl NOT FOUND")
     st.write("📁 Files:", os.listdir())
     st.stop()
- 
+
 # ================= SIDEBAR =================
 with st.sidebar:
     st.markdown("## 🚗 Car Gallery")
- 
-    # GIF at top
+
+    # Animated SVG car
     st.markdown("""
-    <div style='text-align:center; margin-bottom:15px;'>
-        <img src='https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif'
-             style='width:100%; border-radius:12px;' alt='car gif'/>
+    <div style='background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 16px; padding: 18px 10px 10px 10px; margin-bottom: 15px;'>
+        <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+          <defs>
+            <radialGradient id="wheelGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color:#555"/>
+              <stop offset="100%" style="stop-color:#111"/>
+            </radialGradient>
+            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#667eea"/>
+              <stop offset="100%" style="stop-color:#764ba2"/>
+            </linearGradient>
+            <linearGradient id="windowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#a8edff;stop-opacity:0.9"/>
+              <stop offset="100%" style="stop-color:#6ec6e6;stop-opacity:0.6"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Road -->
+          <rect x="0" y="95" width="300" height="25" fill="#2d2d2d" rx="4"/>
+          <g fill="#f0c040" opacity="0.7">
+            <animateTransform attributeName="transform" type="translate" from="0,0" to="-60,0" dur="0.6s" repeatCount="indefinite"/>
+            <rect x="10"  y="105" width="40" height="5" rx="2"/>
+            <rect x="70"  y="105" width="40" height="5" rx="2"/>
+            <rect x="130" y="105" width="40" height="5" rx="2"/>
+            <rect x="190" y="105" width="40" height="5" rx="2"/>
+            <rect x="250" y="105" width="40" height="5" rx="2"/>
+            <rect x="310" y="105" width="40" height="5" rx="2"/>
+          </g>
+
+          <!-- Car group with bounce -->
+          <g>
+            <animateTransform attributeName="transform" type="translate" values="0,0;0,-2;0,0;0,-1;0,0" dur="0.8s" repeatCount="indefinite"/>
+            <ellipse cx="150" cy="97" rx="80" ry="5" fill="#000" opacity="0.25"/>
+            <rect x="55" y="65" width="190" height="35" fill="url(#bodyGrad)" rx="8"/>
+            <path d="M95,65 Q115,38 155,36 Q185,35 205,65 Z" fill="url(#bodyGrad)"/>
+            <path d="M100,63 Q116,44 152,42 Q176,41 198,63 Z" fill="url(#windowGrad)" opacity="0.85"/>
+            <rect x="102" y="50" width="38" height="15" fill="url(#windowGrad)" rx="3" opacity="0.7"/>
+            <ellipse cx="243" cy="78" rx="8" ry="5" fill="#fff9c4" opacity="0.95"/>
+            <ellipse cx="243" cy="78" rx="5" ry="3" fill="#ffe082"/>
+            <polygon points="251,74 280,65 280,91 251,82" fill="#fff9c4" opacity="0.15"/>
+            <ellipse cx="57" cy="78" rx="6" ry="4" fill="#ff5252" opacity="0.9"/>
+            <line x1="155" y1="66" x2="155" y2="99" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+            <rect x="165" y="78" width="14" height="3" fill="#ffffff" rx="1.5" opacity="0.4"/>
+            <rect x="118" y="78" width="14" height="3" fill="#ffffff" rx="1.5" opacity="0.4"/>
+            <circle cx="210" cy="97" r="16" fill="url(#wheelGrad)"/>
+            <circle cx="210" cy="97" r="10" fill="#333"/>
+            <circle cx="210" cy="97" r="4"  fill="#888"/>
+            <g transform="translate(210,97)">
+              <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="0.5s" repeatCount="indefinite" additive="sum"/>
+              <line x1="0" y1="-10" x2="0" y2="10" stroke="#666" stroke-width="2"/>
+              <line x1="-10" y1="0" x2="10" y2="0" stroke="#666" stroke-width="2"/>
+            </g>
+            <circle cx="95" cy="97" r="16" fill="url(#wheelGrad)"/>
+            <circle cx="95" cy="97" r="10" fill="#333"/>
+            <circle cx="95" cy="97" r="4"  fill="#888"/>
+            <g transform="translate(95,97)">
+              <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="0.5s" repeatCount="indefinite" additive="sum"/>
+              <line x1="0" y1="-10" x2="0" y2="10" stroke="#666" stroke-width="2"/>
+              <line x1="-10" y1="0" x2="10" y2="0" stroke="#666" stroke-width="2"/>
+            </g>
+          </g>
+
+          <g fill="#ffffff" opacity="0.5">
+            <circle cx="20"  cy="15" r="1.2"/>
+            <circle cx="50"  cy="8"  r="0.8"/>
+            <circle cx="80"  cy="20" r="1"/>
+            <circle cx="200" cy="10" r="1.2"/>
+            <circle cx="240" cy="20" r="0.8"/>
+            <circle cx="270" cy="8"  r="1"/>
+          </g>
+        </svg>
+        <p style="color:#aaa; font-size:12px; text-align:center; margin:4px 0 0 0;">🚗 Find Your Car's Value</p>
     </div>
     """, unsafe_allow_html=True)
- 
+
     st.markdown("---")
     st.markdown("### 🏎️ Featured Cars")
- 
+
     cars = [
         (
-            "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg/320px-2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg",
+            "🟢 Maruti Alto — Budget Pick"
         ),
         (
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg/320px-2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg",
@@ -136,7 +206,7 @@ with st.sidebar:
             "🔴 BMW 3 Series — Luxury"
         ),
     ]
- 
+
     for img_url, caption in cars:
         st.markdown(f"""
         <div style='margin-bottom:15px;'>
@@ -144,25 +214,33 @@ with st.sidebar:
             <p style='font-size:13px; color:#555; margin-top:5px; text-align:center;'>{caption}</p>
         </div>
         """, unsafe_allow_html=True)
- 
+
     st.markdown("---")
-    st.markdown("### 📊 Model Info")
-    st.info("🤖 Linear Regression\n\n📈 R² Score: ~0.74\n\n📦 Trained on 5,034 cars")
- 
+    st.markdown("### 🏷️ Sponsored Ads")
+    st.image(
+        "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
+        caption="Mahindra Thar – Book Now!"
+    )
+    st.image(
+        "https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg",
+        caption="Hyundai Creta – Best Seller"
+    )
+
+    st.markdown("---")
     if st.button("🚪 Logout"):
         st.session_state.logged_in = False
         st.rerun()
- 
+
 # ================= MAIN UI =================
 st.markdown('<p class="title-text">🚗 Used Car Price Predictor</p>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">Get an instant estimated price for any used car in India</p>', unsafe_allow_html=True)
 st.markdown("---")
- 
+
 col1, col2 = st.columns(2)
- 
+
 with col1:
     st.markdown('<p class="section-header">🏷️ Car Details</p>', unsafe_allow_html=True)
- 
+
     brand = st.selectbox("Brand", [
         "Maruti", "Hyundai", "Honda", "Toyota", "Ford", "Volkswagen",
         "BMW", "Mercedes-Benz", "Audi", "Tata", "Mahindra", "Renault",
@@ -170,35 +248,35 @@ with col1:
         "Land", "Mini", "Mitsubishi", "Fiat", "Datsun", "Porsche",
         "Smart", "Bentley", "ISUZU"
     ])
- 
+
     year = st.slider("Year of Manufacture", 1996, 2019, 2015)
- 
+
     fuel = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "LPG", "Electric"])
- 
+
     transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
- 
+
 with col2:
     st.markdown('<p class="section-header">📍 Other Details</p>', unsafe_allow_html=True)
- 
+
     location = st.selectbox("Location", [
         "Mumbai", "Pune", "Chennai", "Hyderabad", "Jaipur",
         "Kochi", "Coimbatore", "Kolkata", "Delhi", "Bangalore", "Ahmedabad"
     ])
- 
+
     owner = st.selectbox("Owner Type", ["First", "Second"])
- 
+
     kms = st.number_input("Kilometers Driven", min_value=0, max_value=300000, value=50000, step=1000)
- 
+
     mileage = st.number_input("Mileage (kmpl)", min_value=5.0, max_value=40.0, value=18.0, step=0.5)
- 
+
     seats = st.selectbox("Seats", [2, 4, 5])
- 
+
 # ================= PREDICTION =================
 st.markdown("<br>", unsafe_allow_html=True)
 _, col_btn, _ = st.columns([1, 1, 1])
 with col_btn:
     predict_btn = st.button("🚀 Predict Price")
- 
+
 if predict_btn:
     input_df = pd.DataFrame([{
         "Location": location,
@@ -211,22 +289,22 @@ if predict_btn:
         "Seats": float(seats),
         "Brand": brand
     }])
- 
+
     try:
         prediction = model.predict(input_df)[0]
         prediction = max(prediction, 0)
- 
+
         st.markdown(f"""
         <div class="result-box">
             💰 Estimated Price: ₹ {round(prediction, 2)} Lakhs
         </div>
         """, unsafe_allow_html=True)
- 
+
         st.markdown("<br>", unsafe_allow_html=True)
- 
+
         with st.expander("📋 View Input Summary"):
             st.dataframe(input_df.T.rename(columns={0: "Value"}), use_container_width=True)
- 
+
     except Exception as e:
         st.error("❌ Prediction failed")
         st.exception(e)
