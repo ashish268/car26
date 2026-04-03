@@ -34,10 +34,10 @@ if not st.session_state.logged_in:
     st.stop()
 
 # ================= LOAD MODEL =================
-model_path = "car_model.pkl"
+model_path = r"C:\Users\mishti\car_model.pkl"   # ✅ FIXED PATH
 
 if not os.path.exists(model_path):
-    st.error("❌ car_model.pkl not found. Keep it in same folder as app.py")
+    st.error("❌ car_model.pkl not found at given path")
     st.stop()
 
 try:
@@ -85,7 +85,6 @@ input_df = pd.DataFrame([input_dict])
 # ================= PREPROCESS =================
 input_df = pd.get_dummies(input_df)
 
-# ⚠️ MUST MATCH TRAINING COLUMNS
 expected_columns = [
     'Year', 'Kilometers_Driven', 'Mileage', 'Engine', 'Power',
     'Seats', 'New_Price',
@@ -95,12 +94,10 @@ expected_columns = [
     'Owner_Type_Second', 'Owner_Type_Third', 'Owner_Type_Fourth & Above'
 ]
 
-# Add missing columns
 for col in expected_columns:
     if col not in input_df.columns:
         input_df[col] = 0
 
-# Arrange columns
 input_df = input_df[expected_columns]
 
 # ================= PREDICTION =================
@@ -112,5 +109,4 @@ if st.button("🚀 Predict Price"):
     except Exception as e:
         st.error("❌ Prediction failed")
         st.write(e)
-
 
