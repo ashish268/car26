@@ -2,113 +2,233 @@ import streamlit as st
 import pickle
 import pandas as pd
 import os
-
+ 
 # ================= PAGE CONFIG =================
-st.set_page_config(page_title="Car Price Predictor", layout="wide")
-
+st.set_page_config(page_title="Car Price Predictor", layout="wide", page_icon="🚗")
+ 
+# ================= CUSTOM CSS =================
+st.markdown("""
+<style>
+    .main { background-color: #f0f2f6; }
+    .stButton>button {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 25px;
+        font-size: 18px;
+        font-weight: bold;
+        width: 100%;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .stButton>button:hover {
+        background: linear-gradient(90deg, #764ba2, #667eea);
+        transform: scale(1.02);
+    }
+    .result-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        font-size: 32px;
+        font-weight: bold;
+        margin-top: 20px;
+        box-shadow: 0 8px 32px rgba(102,126,234,0.4);
+    }
+    .title-text {
+        font-size: 42px;
+        font-weight: 800;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+    }
+    .subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+    .section-header {
+        color: #667eea;
+        font-size: 18px;
+        font-weight: 700;
+        border-left: 4px solid #667eea;
+        padding-left: 10px;
+        margin: 20px 0 10px 0;
+    }
+</style>
+""", unsafe_allow_html=True)
+ 
 # ================= LOGIN =================
-VALID_USERS = {
-    "admin": "12345"
-}
-
+VALID_USERS = {"admin": "12345"}
+ 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
-
+ 
 def login():
-    st.title("🔐 Login")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    if st.button("Login"):
-        if username in VALID_USERS and VALID_USERS[username] == password:
-            st.session_state.logged_in = True
-            st.success("Login successful ✅")
-            st.rerun()
-        else:
-            st.error("Invalid credentials ❌")
-
+    col1, col2, col3 = st.columns([1, 1.5, 1])
+    with col2:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown("## 🔐 Login to Car Price Predictor")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.button("Login"):
+            if username in VALID_USERS and VALID_USERS[username] == password:
+                st.session_state.logged_in = True
+                st.success("Login successful ✅")
+                st.rerun()
+            else:
+                st.error("Invalid credentials ❌")
+ 
 if not st.session_state.logged_in:
     login()
     st.stop()
-
+ 
 # ================= LOAD MODEL =================
 model = None
-possible_paths = [
-    "car_model.pkl",
-    "./car_model.pkl",
-    "models/car_model.pkl",
-    "./models/car_model.pkl"
-]
-
-for path in possible_paths:
+for path in ["car_model.pkl", "./car_model.pkl", "models/car_model.pkl"]:
     if os.path.exists(path):
         try:
             with open(path, "rb") as f:
                 model = pickle.load(f)
             break
         except Exception as e:
-            st.error(f"❌ Error loading model from {path}: {e}")
+            st.error(f"❌ Error loading model: {e}")
             st.stop()
-
+ 
 if model is None:
     st.error("❌ car_model.pkl NOT FOUND")
-    st.write("📁 Files in app folder:", os.listdir())
+    st.write("📁 Files:", os.listdir())
     st.stop()
-
-# ================= UI =================
-st.title("🚗 Used Car Price Predictor")
-
+ 
+# ================= SIDEBAR =================
+with st.sidebar:
+    st.markdown("## 🚗 Car Gallery")
+ 
+    # GIF at top
+    st.markdown("""
+    <div style='text-align:center; margin-bottom:15px;'>
+        <img src='https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif'
+             style='width:100%; border-radius:12px;' alt='car gif'/>
+    </div>
+    """, unsafe_allow_html=True)
+ 
+    st.markdown("---")
+    st.markdown("### 🏎️ Featured Cars")
+ 
+    cars = [
+        (
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg/320px-2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg",
+            "🟢 Maruti Alto — Budget Pick"
+        ),
+        (
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg/320px-2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg",
+            "🔵 Hyundai Creta — Popular SUV"
+        ),
+        (
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/2016_Toyota_Innova_Crysta_2.8_GX_AT_%28facelift%2C_grey%29%2C_front_8.15.19.jpg/320px-2016_Toyota_Innova_Crysta_2.8_GX_AT_%28facelift%2C_grey%29%2C_front_8.15.19.jpg",
+            "🟡 Toyota Innova — Family Car"
+        ),
+        (
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/2016_BMW_3_Series_%28F30%2C_facelift%2C_China%29_320i_sedan_%282018-08-15%29_01.jpg/320px-2016_BMW_3_Series_%28F30%2C_facelift%2C_China%29_320i_sedan_%282018-08-15%29_01.jpg",
+            "🔴 BMW 3 Series — Luxury"
+        ),
+    ]
+ 
+    for img_url, caption in cars:
+        st.markdown(f"""
+        <div style='margin-bottom:15px;'>
+            <img src='{img_url}' style='width:100%; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);'/>
+            <p style='font-size:13px; color:#555; margin-top:5px; text-align:center;'>{caption}</p>
+        </div>
+        """, unsafe_allow_html=True)
+ 
+    st.markdown("---")
+    st.markdown("### 📊 Model Info")
+    st.info("🤖 Linear Regression\n\n📈 R² Score: ~0.74\n\n📦 Trained on 5,034 cars")
+ 
+    if st.button("🚪 Logout"):
+        st.session_state.logged_in = False
+        st.rerun()
+ 
+# ================= MAIN UI =================
+st.markdown('<p class="title-text">🚗 Used Car Price Predictor</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">Get an instant estimated price for any used car in India</p>', unsafe_allow_html=True)
+st.markdown("---")
+ 
 col1, col2 = st.columns(2)
-
+ 
 with col1:
+    st.markdown('<p class="section-header">🏷️ Car Details</p>', unsafe_allow_html=True)
+ 
     brand = st.selectbox("Brand", [
         "Maruti", "Hyundai", "Honda", "Toyota", "Ford", "Volkswagen",
         "BMW", "Mercedes-Benz", "Audi", "Tata", "Mahindra", "Renault",
         "Nissan", "Chevrolet", "Skoda", "Jeep", "Jaguar", "Volvo",
-        "Land", "Mini", "Mitsubishi", "Fiat", "Force", "Isuzu",
-        "Lamborghini", "Ferrari", "Bentley", "Other"
+        "Land", "Mini", "Mitsubishi", "Fiat", "Datsun", "Porsche",
+        "Smart", "Bentley", "ISUZU"
     ])
+ 
+    year = st.slider("Year of Manufacture", 1996, 2019, 2015)
+ 
+    fuel = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "LPG", "Electric"])
+ 
+    transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
+ 
+with col2:
+    st.markdown('<p class="section-header">📍 Other Details</p>', unsafe_allow_html=True)
+ 
     location = st.selectbox("Location", [
         "Mumbai", "Pune", "Chennai", "Hyderabad", "Jaipur",
         "Kochi", "Coimbatore", "Kolkata", "Delhi", "Bangalore", "Ahmedabad"
     ])
-    year = st.slider("Year", 1995, 2023, 2018)
-    kms = st.number_input("Kilometers Driven", 0, 300000, 50000)
-    fuel = st.selectbox("Fuel Type", ["Petrol", "Diesel", "CNG", "LPG", "Electric"])
-    transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
-
-with col2:
-    owner = st.selectbox("Owner Type", ["First", "Second", "Third", "Fourth & Above"])
-    mileage = st.number_input("Mileage (kmpl)", 5.0, 40.0, 18.0)
-    engine = st.number_input("Engine (CC)", 500, 5000, 1200)
-    power = st.number_input("Power (bhp)", 20.0, 500.0, 90.0)
-    seats = st.selectbox("Seats", [2, 4, 5, 6, 7, 8])
-
-# ================= INPUT =================
-# Must match EXACTLY the columns the pipeline was trained on:
-# ['Location', 'Year', 'Kilometers_Driven', 'Fuel_Type', 'Transmission',
-#  'Owner_Type', 'Mileage', 'Engine', 'Power', 'Seats', 'Brand']
-
-input_df = pd.DataFrame([{
-    "Location": location,
-    "Year": year,
-    "Kilometers_Driven": kms,
-    "Fuel_Type": fuel,
-    "Transmission": transmission,
-    "Owner_Type": owner,
-    "Mileage": float(mileage),
-    "Engine": float(engine),
-    "Power": float(power),
-    "Seats": float(seats),
-    "Brand": brand
-}])
-
+ 
+    owner = st.selectbox("Owner Type", ["First", "Second"])
+ 
+    kms = st.number_input("Kilometers Driven", min_value=0, max_value=300000, value=50000, step=1000)
+ 
+    mileage = st.number_input("Mileage (kmpl)", min_value=5.0, max_value=40.0, value=18.0, step=0.5)
+ 
+    seats = st.selectbox("Seats", [2, 4, 5])
+ 
 # ================= PREDICTION =================
-if st.button("🚀 Predict Price"):
+st.markdown("<br>", unsafe_allow_html=True)
+_, col_btn, _ = st.columns([1, 1, 1])
+with col_btn:
+    predict_btn = st.button("🚀 Predict Price")
+ 
+if predict_btn:
+    input_df = pd.DataFrame([{
+        "Location": location,
+        "Year": year,
+        "Kilometers_Driven": kms,
+        "Fuel_Type": fuel,
+        "Transmission": transmission,
+        "Owner_Type": owner,
+        "Mileage": float(mileage),
+        "Seats": float(seats),
+        "Brand": brand
+    }])
+ 
     try:
-        # Pipeline handles all preprocessing internally — no manual encoding needed
         prediction = model.predict(input_df)[0]
         prediction = max(prediction, 0)
-        st.success(f"💰 Estimated Price: ₹ {round(prediction, 2)} Lakhs")
+ 
+        st.markdown(f"""
+        <div class="result-box">
+            💰 Estimated Price: ₹ {round(prediction, 2)} Lakhs
+        </div>
+        """, unsafe_allow_html=True)
+ 
+        st.markdown("<br>", unsafe_allow_html=True)
+ 
+        with st.expander("📋 View Input Summary"):
+            st.dataframe(input_df.T.rename(columns={0: "Value"}), use_container_width=True)
+ 
     except Exception as e:
         st.error("❌ Prediction failed")
         st.exception(e)
+ 
