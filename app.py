@@ -121,8 +121,7 @@ with st.sidebar:
  
     cars = [
         (
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg/320px-2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg",
-            "🟢 Maruti Alto — Budget Pick"
+            "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
         ),
         (
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg/320px-2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg",
