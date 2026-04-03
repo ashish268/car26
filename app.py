@@ -108,82 +108,14 @@ if model is None:
 with st.sidebar:
     st.markdown("## 🚗 Car Gallery")
 
-    # Animated SVG car
-    st.markdown("""
-    <div style='background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 16px; padding: 18px 10px 10px 10px; margin-bottom: 15px;'>
-        <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
-          <defs>
-            <radialGradient id="wheelGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" style="stop-color:#555"/>
-              <stop offset="100%" style="stop-color:#111"/>
-            </radialGradient>
-            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style="stop-color:#667eea"/>
-              <stop offset="100%" style="stop-color:#764ba2"/>
-            </linearGradient>
-            <linearGradient id="windowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style="stop-color:#a8edff;stop-opacity:0.9"/>
-              <stop offset="100%" style="stop-color:#6ec6e6;stop-opacity:0.6"/>
-            </linearGradient>
-          </defs>
-
-          <!-- Road -->
-          <rect x="0" y="95" width="300" height="25" fill="#2d2d2d" rx="4"/>
-          <g fill="#f0c040" opacity="0.7">
-            <animateTransform attributeName="transform" type="translate" from="0,0" to="-60,0" dur="0.6s" repeatCount="indefinite"/>
-            <rect x="10"  y="105" width="40" height="5" rx="2"/>
-            <rect x="70"  y="105" width="40" height="5" rx="2"/>
-            <rect x="130" y="105" width="40" height="5" rx="2"/>
-            <rect x="190" y="105" width="40" height="5" rx="2"/>
-            <rect x="250" y="105" width="40" height="5" rx="2"/>
-            <rect x="310" y="105" width="40" height="5" rx="2"/>
-          </g>
-
-          <!-- Car group with bounce -->
-          <g>
-            <animateTransform attributeName="transform" type="translate" values="0,0;0,-2;0,0;0,-1;0,0" dur="0.8s" repeatCount="indefinite"/>
-            <ellipse cx="150" cy="97" rx="80" ry="5" fill="#000" opacity="0.25"/>
-            <rect x="55" y="65" width="190" height="35" fill="url(#bodyGrad)" rx="8"/>
-            <path d="M95,65 Q115,38 155,36 Q185,35 205,65 Z" fill="url(#bodyGrad)"/>
-            <path d="M100,63 Q116,44 152,42 Q176,41 198,63 Z" fill="url(#windowGrad)" opacity="0.85"/>
-            <rect x="102" y="50" width="38" height="15" fill="url(#windowGrad)" rx="3" opacity="0.7"/>
-            <ellipse cx="243" cy="78" rx="8" ry="5" fill="#fff9c4" opacity="0.95"/>
-            <ellipse cx="243" cy="78" rx="5" ry="3" fill="#ffe082"/>
-            <polygon points="251,74 280,65 280,91 251,82" fill="#fff9c4" opacity="0.15"/>
-            <ellipse cx="57" cy="78" rx="6" ry="4" fill="#ff5252" opacity="0.9"/>
-            <line x1="155" y1="66" x2="155" y2="99" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
-            <rect x="165" y="78" width="14" height="3" fill="#ffffff" rx="1.5" opacity="0.4"/>
-            <rect x="118" y="78" width="14" height="3" fill="#ffffff" rx="1.5" opacity="0.4"/>
-            <circle cx="210" cy="97" r="16" fill="url(#wheelGrad)"/>
-            <circle cx="210" cy="97" r="10" fill="#333"/>
-            <circle cx="210" cy="97" r="4"  fill="#888"/>
-            <g transform="translate(210,97)">
-              <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="0.5s" repeatCount="indefinite" additive="sum"/>
-              <line x1="0" y1="-10" x2="0" y2="10" stroke="#666" stroke-width="2"/>
-              <line x1="-10" y1="0" x2="10" y2="0" stroke="#666" stroke-width="2"/>
-            </g>
-            <circle cx="95" cy="97" r="16" fill="url(#wheelGrad)"/>
-            <circle cx="95" cy="97" r="10" fill="#333"/>
-            <circle cx="95" cy="97" r="4"  fill="#888"/>
-            <g transform="translate(95,97)">
-              <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="0.5s" repeatCount="indefinite" additive="sum"/>
-              <line x1="0" y1="-10" x2="0" y2="10" stroke="#666" stroke-width="2"/>
-              <line x1="-10" y1="0" x2="10" y2="0" stroke="#666" stroke-width="2"/>
-            </g>
-          </g>
-
-          <g fill="#ffffff" opacity="0.5">
-            <circle cx="20"  cy="15" r="1.2"/>
-            <circle cx="50"  cy="8"  r="0.8"/>
-            <circle cx="80"  cy="20" r="1"/>
-            <circle cx="200" cy="10" r="1.2"/>
-            <circle cx="240" cy="20" r="0.8"/>
-            <circle cx="270" cy="8"  r="1"/>
-          </g>
-        </svg>
-        <p style="color:#aaa; font-size:12px; text-align:center; margin:4px 0 0 0;">🚗 Find Your Car's Value</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.image(
+        "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
+        caption="🚙 Mahindra Thar"
+    )
+    st.image(
+        "https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg",
+        caption="🚗 Hyundai Creta"
+    )
 
     st.markdown("---")
     st.markdown("### 🏎️ Featured Cars")
@@ -214,17 +146,6 @@ with st.sidebar:
             <p style='font-size:13px; color:#555; margin-top:5px; text-align:center;'>{caption}</p>
         </div>
         """, unsafe_allow_html=True)
-
-    st.markdown("---")
-    st.markdown("### 🏷️ Sponsored Ads")
-    st.image(
-        "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
-        caption="Mahindra Thar – Book Now!"
-    )
-    st.image(
-        "https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg",
-        caption="Hyundai Creta – Best Seller"
-    )
 
     st.markdown("---")
     if st.button("🚪 Logout"):
