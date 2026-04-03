@@ -1,7 +1,6 @@
 import streamlit as st
 import joblib
 import pandas as pd
-import altair as alt
 import numpy as np
 
 # ================= LOGIN SETUP =================
@@ -45,7 +44,7 @@ if not st.session_state.logged_in:
 
 # ================= LOAD MODEL =================
 data = joblib.load("car_model.pkl")
-model = data["model"]        # pipeline model
+model = data["model"]
 columns = data["columns"]
 
 # ================= HEADER =================
@@ -81,7 +80,7 @@ with right:
     )
 
 # ================= DEFAULT POWER =================
-power = 90  # default value
+power = 90
 
 # ================= PREPARE INPUT =================
 input_dict = {
@@ -100,11 +99,25 @@ input_dict = {
 
 input_df = pd.DataFrame([input_dict])
 
+# ✅ FIX: Ensure all columns exist (IMPORTANT)
+for col in columns:
+    if col not in input_df.columns:
+        input_df[col] = np.nan
+
+# Keep same order
+input_df = input_df[columns]
+
 # ================= PREDICTION =================
 st.markdown("---")
-if st.button("🚀 PREDICT PRICE", use_container_width=True):
-    prediction = model.predict(input_df)[0]
-    prediction = max(prediction, 0)
 
-    st.success(f"💰 Estimated Car Price: ₹ {round(prediction, 2)} Lakhs")
+if st.button("🚀 PREDICT PRICE", use_container_width=True):
+    try:
+        prediction = model.predict(input_df)[0]
+        prediction = max(prediction, 0)
+
+        st.success(f"💰 Estimated Car Price: ₹ {round(prediction, 2)} Lakhs")
+
+    except Exception as e:
+        st.error("❌ Prediction failed. Check input format.")
+        st.write(e)
 
