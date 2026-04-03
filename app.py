@@ -120,32 +120,10 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 🏎️ Featured Cars")
 
-    cars = [
-        (
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg/320px-2019_Maruti_Suzuki_Alto_800_LXi_%28facelift%2C_grey%29%2C_front_8.21.19.jpg",
-            "🟢 Maruti Alto — Budget Pick"
-        ),
-        (
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg/320px-2019_Hyundai_Creta_%28GS%2C_facelift%29_1.6_CRDi_wagon_%282019-09-16%29_01.jpg",
-            "🔵 Hyundai Creta — Popular SUV"
-        ),
-        (
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/2016_Toyota_Innova_Crysta_2.8_GX_AT_%28facelift%2C_grey%29%2C_front_8.15.19.jpg/320px-2016_Toyota_Innova_Crysta_2.8_GX_AT_%28facelift%2C_grey%29%2C_front_8.15.19.jpg",
-            "🟡 Toyota Innova — Family Car"
-        ),
-        (
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/2016_BMW_3_Series_%28F30%2C_facelift%2C_China%29_320i_sedan_%282018-08-15%29_01.jpg/320px-2016_BMW_3_Series_%28F30%2C_facelift%2C_China%29_320i_sedan_%282018-08-15%29_01.jpg",
-            "🔴 BMW 3 Series — Luxury"
-        ),
-    ]
-
-    for img_url, caption in cars:
-        st.markdown(f"""
-        <div style='margin-bottom:15px;'>
-            <img src='{img_url}' style='width:100%; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);'/>
-            <p style='font-size:13px; color:#555; margin-top:5px; text-align:center;'>{caption}</p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/33416/alto-800-exterior-right-front-three-quarter-3.jpeg", caption="🟢 Maruti Alto — Budget Pick")
+    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg", caption="🔵 Hyundai Creta — Popular SUV")
+    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg", caption="🟡 Mahindra Thar — Off-Road Beast")
+    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/130591/fortuner-exterior-right-front-three-quarter-2.jpeg", caption="🔴 Toyota Fortuner — Premium SUV")
 
     st.markdown("---")
     if st.button("🚪 Logout"):
