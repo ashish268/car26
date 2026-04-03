@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import pandas as pd
+import os
 
 # ================= PAGE CONFIG =================
 st.set_page_config(page_title="Car Price Predictor", layout="wide")
@@ -33,22 +34,14 @@ if not st.session_state.logged_in:
     st.stop()
 
 # ================= LOAD MODEL =================
+model_path = "car_model.pkl"
+
+if not os.path.exists(model_path):
+    st.error("❌ car_model.pkl not found. Keep it in same folder as app.py")
+    st.stop()
+
 try:
-    with open("car_model.pkl", "rb") as f:
-        data = pickle.load(f)
-
-    # Handle dict or direct model
-    if isinstance(data, dict):
-        model = data.get("model", None)
-        model_columns = data.get("columns", None)
-    else:
-        model = data
-        model_columns = None
-
-    if model is None:
-        st.error("❌ Model not found inside pkl file")
-        st.stop()
-
+    model = pickle.load(open(model_path, "rb"))
 except Exception as e:
     st.error("❌ Error loading model")
     st.write(e)
@@ -89,27 +82,35 @@ input_dict = {
 
 input_df = pd.DataFrame([input_dict])
 
-# ================= HANDLE OLD MODEL =================
-if model_columns is not None:
-    input_df = pd.get_dummies(input_df)
+# ================= PREPROCESS =================
+input_df = pd.get_dummies(input_df)
 
-    # Add missing columns
-    for col in model_columns:
-        if col not in input_df.columns:
-            input_df[col] = 0
+# ⚠️ MUST MATCH TRAINING COLUMNS
+expected_columns = [
+    'Year', 'Kilometers_Driven', 'Mileage', 'Engine', 'Power',
+    'Seats', 'New_Price',
+    'Fuel_Type_CNG', 'Fuel_Type_Diesel', 'Fuel_Type_Electric',
+    'Fuel_Type_LPG', 'Fuel_Type_Petrol',
+    'Transmission_Manual',
+    'Owner_Type_Second', 'Owner_Type_Third', 'Owner_Type_Fourth & Above'
+]
 
-    # Ensure correct order
-    input_df = input_df[model_columns]
+# Add missing columns
+for col in expected_columns:
+    if col not in input_df.columns:
+        input_df[col] = 0
+
+# Arrange columns
+input_df = input_df[expected_columns]
 
 # ================= PREDICTION =================
 if st.button("🚀 Predict Price"):
     try:
         prediction = model.predict(input_df)[0]
         prediction = max(prediction, 0)
-
         st.success(f"💰 Estimated Price: ₹ {round(prediction, 2)} Lakhs")
-
     except Exception as e:
         st.error("❌ Prediction failed")
-        st.write("Error:", e)
+        st.write(e)
+
 
