@@ -107,23 +107,21 @@ if model is None:
 # ================= SIDEBAR =================
 with st.sidebar:
     st.markdown("## 🚗 Car Gallery")
+    st.markdown("### 🏎️ Featured Cars")
 
     st.image(
-        "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
-        caption="🚙 Mahindra Thar"
+        "https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg",
+        caption="🔵 Hyundai Creta — Popular SUV"
     )
     st.image(
-        "https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg",
-        caption="🚗 Hyundai Creta"
+        "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
+        caption="🟡 Mahindra Thar — Off-Road Beast"
     )
 
     st.markdown("---")
-    st.markdown("### 🏎️ Featured Cars")
-
-    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/33416/alto-800-exterior-right-front-three-quarter-3.jpeg", caption="🟢 Maruti Alto — Budget Pick")
-    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter.jpeg", caption="🔵 Hyundai Creta — Popular SUV")
-    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg", caption="🟡 Mahindra Thar — Off-Road Beast")
-    st.image("https://imgd.aeplcdn.com/664x374/n/cw/ec/130591/fortuner-exterior-right-front-three-quarter-2.jpeg", caption="🔴 Toyota Fortuner — Premium SUV")
+    st.markdown("### 🏷️ Sponsored Ads")
+    st.markdown("📢 **Mahindra Thar** – Book Now! [CarWale](https://www.carwale.com)")
+    st.markdown("📢 **Hyundai Creta** – Best Seller! [CarWale](https://www.carwale.com)")
 
     st.markdown("---")
     if st.button("🚪 Logout"):
