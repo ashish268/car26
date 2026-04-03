@@ -114,7 +114,7 @@ with st.sidebar:
         caption="🔵 Hyundai Creta — Popular SUV"
     )
     st.image(
-        "https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter.jpeg",
+        "https://imgd.aeplcdn.com/664x374/n/cw/ec/204996/thar-2025-exterior-right-front-three-quarter.jpeg?isig=0&q=80",
         caption="🟡 Mahindra Thar — Off-Road Beast"
     )
 
