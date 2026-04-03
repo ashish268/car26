@@ -34,17 +34,30 @@ if not st.session_state.logged_in:
     st.stop()
 
 # ================= LOAD MODEL =================
-model_path = r"C:\Users\mishti\car_model.pkl"   # ✅ FIXED PATH
+model = None
 
-if not os.path.exists(model_path):
-    st.error("❌ car_model.pkl not found at given path")
-    st.stop()
+possible_paths = [
+    "car_model.pkl",
+    "./car_model.pkl",
+    "models/car_model.pkl",
+    "./models/car_model.pkl"
+]
 
-try:
-    model = pickle.load(open(model_path, "rb"))
-except Exception as e:
-    st.error("❌ Error loading model")
-    st.write(e)
+for path in possible_paths:
+    if os.path.exists(path):
+        try:
+            with open(path, "rb") as f:
+                model = pickle.load(f)
+            break
+        except Exception as e:
+            st.error(f"❌ Error loading model from {path}")
+            st.write(e)
+            st.stop()
+
+if model is None:
+    st.error("❌ car_model.pkl NOT FOUND")
+    st.write("📁 Files available in app folder:")
+    st.write(os.listdir())
     st.stop()
 
 # ================= UI =================
