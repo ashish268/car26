@@ -193,7 +193,7 @@ if predict_btn:
 
         st.markdown(f"""
         <div class="result-box">
-            💰 Estimated Price: ₹ {round(prediction, 2)} Lakhs
+            💰 Estimated Price: ₹ {prediction:.2f} Lakhs
         </div>
         """, unsafe_allow_html=True)
 
