@@ -143,7 +143,7 @@ with col1:
         "BMW", "Mercedes-Benz", "Audi", "Tata", "Mahindra", "Renault",
         "Nissan", "Chevrolet", "Skoda", "Jeep", "Jaguar", "Volvo",
         "Land", "Mini", "Mitsubishi", "Fiat", "Datsun", "Porsche",
-        "Smart", "Bentley", "ISUZU"
+        "Smart", "Bentley", "ISUZU" , "atlas"
     ])
 
     year = st.slider("Year of Manufacture", 1996, 2019, 2015)
